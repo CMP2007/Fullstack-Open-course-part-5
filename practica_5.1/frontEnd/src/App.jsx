@@ -3,7 +3,9 @@ import Note from './components/Note'
 import noteService from './services/notes'
 import Notification from './components/error'
 import Footer from './components/Footer'
-import UserForm from './components/userForm'
+import NoteForm from './components/NoteForm'
+import LoginForm from './components/LoginForm'
+import loginService from './services/login'
 
 
 const App = () => {
@@ -14,6 +16,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
 
   useEffect(()=>{
     noteService
@@ -22,7 +25,15 @@ const App = () => {
         setNotes(initialNotes)
       })
   },[])
-  console.log('render', notes.length, 'notes');
+  
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
+  }, [])
   
 
   const addNote = (event) => {
@@ -39,14 +50,31 @@ const App = () => {
       })
   }
 
-  const hadleNoteChance = (event) =>{
+  const handleNoteChance = (event) =>{
     console.log(event.target.value)
     setNewNote(event.target.value)
   }
 
-  const handleLogin = (event) =>{
+  const handleLogin = async (event) =>{
     event.preventDefault()
-    console.log('login in with', username, password);
+    
+    try {
+      const user = await loginService.login({username, password})
+
+      window.localStorage.setItem(
+        'loggedNoteappUser', JSON.stringify(user)
+      )
+      noteService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+      console.log(user);
+    } catch (exception) {
+      setErrorMessage('Wrong credentials')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
     
   }
 
@@ -77,28 +105,14 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
-      {/* <UserForm handleLogin={handleLogin} username={username} password={password} ></UserForm> */}
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-            <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-            <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
+      
+      {user === null ?
+      <LoginForm handleLogin= {handleLogin} username={username} setUsername={setUsername} password={password} setPassword={setPassword} /> :
+      <div>
+        <p>{user.name} <b>logged-in</b></p>
+        <NoteForm addNote = {addNote} newNote= {newNote} handleNoteChance={handleNoteChance}/>
+      </div>
+    }
       <div>
         <button onClick={()=> setShowAll(!showAll)}>
           show {showAll ? "important" : "all"}
@@ -109,12 +123,6 @@ const App = () => {
           <Note key={note.id} cambiarImportancia={()=>toggleImportanceOf(note.id)} note={note}/>
         )}
       </ul>
-
-       <form onSubmit={addNote}>
-        <input value={newNote} 
-        onChange={hadleNoteChance}/>
-        <button type="submit">save</button>
-      </form>
       <Footer/>   
     </div>
   )
