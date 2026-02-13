@@ -5,6 +5,8 @@ import Login from './Components/login'
 import LoginServise from './services/login'
 import BlogsForm from './Components/BlogsForm'
 import createBlog from './services/CreateBlog'
+import Notification from './Components/alerts'
+import './index.css'
 
 function App() {
  const [user, setUser] = useState(null)
@@ -14,6 +16,7 @@ function App() {
  const [title, setTitle] = useState(null)
  const [author, setAuthor] = useState('')
  const [url, setUrl] = useState('')
+ const [notification, setNotification] = useState({text:null, style:null})
 
  useEffect(()=>{
   if (user) {
@@ -44,13 +47,17 @@ function App() {
       setPassword('')
       setUser(response)
     }
-    catch (exception){
-      console.error('Error detallado:', exception)
-      alert('Credenciales incorrectas. Por favor, intenta de nuevo.')
+    catch (exception){     
+      setNotification({text:`wrong username or password`, style:'error'})
+      setTimeout(()=>{
+        setNotification({text:null, style:null})
+      },5000)
       setPassword('')
       setUsername('')
     }
  }
+console.log(notification);
+
 
  const handlBlog = async (event)=>{
     event.preventDefault()
@@ -67,10 +74,18 @@ function App() {
         setTitle('')
         setAuthor('')
         setUrl('')
+
+        setNotification({text:`a new blog ${title} by ${author} added`, style:'alert'})
+        setTimeout(()=>{
+          setNotification({text:null, style:null})
+        },5000)
       }
       catch (exception){
         console.error('Error detallado:', exception)
-        alert('Un error al crear el blog.')
+        setNotification({text:`Error registering the blog ${title} by ${author}`, style:'error'})
+        setTimeout(()=>{
+          setNotification({text:null, style:null})
+        },5000)
       }
     }
  }
@@ -86,6 +101,7 @@ function App() {
       return(
         <>
           <h1>log in to application</h1>
+          <Notification message = {notification.text} style={notification.style}/>
           <Login 
             password={password} 
             username={username} 
@@ -99,6 +115,7 @@ function App() {
       return(
         <>
           <h1>blogs</h1>
+          <Notification message = {notification.text} style={notification.style}/>
           <b>{user.name} logged in </b>
           <button onClick={closeSession}>logout</button>
           <BlogsForm
