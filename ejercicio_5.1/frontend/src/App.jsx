@@ -6,16 +6,14 @@ import LoginServise from './services/login'
 import BlogsForm from './Components/BlogsForm'
 import createBlog from './services/CreateBlog'
 import Notification from './Components/alerts'
+import Togglable from './Components/Togglable'
 import './index.css'
 
-function App() {
+const App = () => {
  const [user, setUser] = useState(null)
  const [blogs, setBlogs] = useState([])
  const [username, setUsername] = useState('')
  const [password, setPassword] = useState('')
- const [title, setTitle] = useState(null)
- const [author, setAuthor] = useState('')
- const [url, setUrl] = useState('')
  const [notification, setNotification] = useState({text:null, style:null})
 
  useEffect(()=>{
@@ -56,45 +54,30 @@ function App() {
       setUsername('')
     }
  }
-console.log(notification);
 
-
- const handlBlog = async (event)=>{
-    event.preventDefault()
-    const newBlog = {
-      title: title,
-      author: author,
-      url: url
-    }
-    if (title !== ''&& author !== ''&& url!=='') {
-      try{
-        const response = await createBlog.CreateBlogs(newBlog, user.token)
-        console.log(response);
-        setBlogs(blogs.concat(response))    
-        setTitle('')
-        setAuthor('')
-        setUrl('')
-
-        setNotification({text:`a new blog ${title} by ${author} added`, style:'alert'})
-        setTimeout(()=>{
-          setNotification({text:null, style:null})
-        },5000)
-      }
-      catch (exception){
-        console.error('Error detallado:', exception)
-        setNotification({text:`Error registering the blog ${title} by ${author}`, style:'error'})
-        setTimeout(()=>{
-          setNotification({text:null, style:null})
-        },5000)
-      }
-    }
+ const handlBlog = async (newBlog)=>{
+  try{
+    const response = await createBlog.CreateBlogs(newBlog, user.token)
+    console.log(response);
+    setBlogs(blogs.concat(response))    
+    setNotification({text:`a new blog ${response.title} by ${response.author} added`, style:'alert'})
+    setTimeout(()=>{
+      setNotification({text:null, style:null})
+    },5000)
+  }
+  catch (exception){
+    console.error('Error detallado:', exception)
+    setNotification({text:`Error registering the blog ${newBlog.title} by ${newBlog.author}`, style:'error'})
+    setTimeout(()=>{
+      setNotification({text:null, style:null})
+    },5000)
+  }  
  }
 
  const closeSession = ()=>{
     window.localStorage.removeItem('loggedBlogUser')
     setUser(null)
  }
-
 
   const display = user =>{
     if (!user) {
@@ -118,15 +101,9 @@ console.log(notification);
           <Notification message = {notification.text} style={notification.style}/>
           <b>{user.name} logged in </b>
           <button onClick={closeSession}>logout</button>
-          <BlogsForm
-            title = {title}
-            setTitle = {setTitle}
-            author = {author}
-            setAuthor = {setAuthor}
-            url = {url}
-            setUrl = {setUrl}
-            handlBlog={handlBlog}
-          />
+          <Togglable buttonLabel="create new blog" >
+            <BlogsForm handlBlog={handlBlog}/>
+          </Togglable>
           <BlogsList blogs={blogs} user={user} closeSession={closeSession} />
         </>
       )

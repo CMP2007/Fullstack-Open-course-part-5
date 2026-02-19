@@ -1,6 +1,4 @@
 const Notification = ({ message, style }) => {
-    console.log(style);
-    
   if (message === null) {
     return null
   }
