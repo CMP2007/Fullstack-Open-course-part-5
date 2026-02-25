@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const TogglableBlogs = ({blog}) => {
+const TogglableBlogs = ({blog, putBlogs}) => {
     const [details, setDetails] = useState(false)
 
     const showWhenVisible = { display: details ? '' : 'none' }
@@ -29,7 +29,7 @@ const TogglableBlogs = ({blog}) => {
         <div style={showWhenVisible}>
           {blog.url} <br />
           {blog.likes} 
-          <button>like</button><br />
+          <button onClick={()=>putBlogs(blog)}>like</button><br />
           {blog.author} <br />
         </div>
       </div>

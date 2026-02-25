@@ -58,6 +58,7 @@ blogsRouter.put('/:id', async (request, response) => {
     "author": request.body.author,
     "url": request.body.url,
     "likes": request.body.likes,
+    "user": request.body.user
   }
   const chagedBlog = await Blog.findByIdAndUpdate(request.params.id, newBlog, {new: true})
   response.json(chagedBlog)

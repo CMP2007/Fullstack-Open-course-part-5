@@ -5,6 +5,7 @@ import Login from './Components/login'
 import LoginServise from './services/login'
 import BlogsForm from './Components/BlogsForm'
 import createBlog from './services/CreateBlog'
+import  chageBlogs from './services/chageBlogs' 
 import Notification from './Components/alerts'
 import Togglable from './Components/Togglable'
 import './index.css'
@@ -76,6 +77,27 @@ const App = () => {
   }  
  }
 
+ const putBlogs = async (blog) =>{
+  const userData = blog.user
+  const newBlog = {...blog, likes: blog.likes +1, user: blog.user.id }
+   try{
+    const response = await chageBlogs.changeBlogs(newBlog)
+    const userAndBlog = {...response, user: userData}
+    setBlogs(blogs.map(blog => blog.id !== newBlog.id ? blog : userAndBlog))    
+    setNotification({text:`a vote for ${response.title} by ${response.author} added`, style:'alert'})
+    setTimeout(()=>{
+      setNotification({text:null, style:null})
+    },5000)
+  }
+  catch (exception){
+    console.error('Error detallado:', exception)
+    setNotification({text:`Error registering the vote ${newBlog.title} by ${newBlog.author}`, style:'error'})
+    setTimeout(()=>{
+      setNotification({text:null, style:null})
+    },5000)
+  }  
+ }
+
  const closeSession = ()=>{
     window.localStorage.removeItem('loggedBlogUser')
     setUser(null)
@@ -106,7 +128,7 @@ const App = () => {
           <Togglable buttonLabel="create new blog" ref={blogRef} >
             <BlogsForm handlBlog={handlBlog}/>
           </Togglable>
-          <BlogsList blogs={blogs} user={user} closeSession={closeSession} />
+          <BlogsList blogs={blogs} putBlogs={putBlogs} />
         </>
       )
     }
