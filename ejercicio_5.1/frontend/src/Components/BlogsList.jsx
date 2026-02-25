@@ -1,8 +1,10 @@
+import TogglableBlogs from './TogglableBlogs'
+
 const BlogsList = ({blogs}) => {
     return(
         <div>
             {blogs.map(blog => 
-               <p key={blog.id}> {blog.title} {blog.author} </p>
+                <TogglableBlogs blog={blog} key={blog.id}/>
             )}
         </div>
     )
