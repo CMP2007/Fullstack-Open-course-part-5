@@ -15,7 +15,7 @@ usersRouter.post('/', async  (request, response) => {
     return response.status(400).json({ 
         error: 'la contraseña es requerida y debe tener al menos 3 dígitos' 
     })
-}
+    }
 
     const salRounds = 10
     const passwordHash = await bcrypt.hash(password, salRounds)

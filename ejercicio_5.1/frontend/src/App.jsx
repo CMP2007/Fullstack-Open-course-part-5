@@ -5,7 +5,8 @@ import Login from './Components/login'
 import LoginServise from './services/login'
 import BlogsForm from './Components/BlogsForm'
 import createBlog from './services/CreateBlog'
-import  chageBlogs from './services/chageBlogs' 
+import  chageBlogs from './services/changeBlogs' 
+import deletedBlogs from './services/deletedBlogs'
 import Notification from './Components/alerts'
 import Togglable from './Components/Togglable'
 import './index.css'
@@ -78,8 +79,8 @@ const App = () => {
  }
 
  const putBlogs = async (blog) =>{
-  const userData = blog.user
-  const newBlog = {...blog, likes: blog.likes +1, user: blog.user.id }
+   const userData = blog.user
+   const newBlog = {...blog, likes: blog.likes +1, user: blog.user.id }
    try{
     const response = await chageBlogs.changeBlogs(newBlog)
     const userAndBlog = {...response, user: userData}
@@ -98,6 +99,26 @@ const App = () => {
   }  
  }
 
+  const deletedB = async (id) =>{
+    const blogD = blogs.find(blog => blog.id === id)
+    try{
+      await deletedBlogs.deletedBlogs(id, user.token)
+      setBlogs(blogs.filter(blog => blog.id !== id))    
+      setNotification({text:`the blog ${blogD.title} by ${blogD.author} has been successfully deleted`, style:'alert'})
+      setTimeout(()=>{
+        setNotification({text:null, style:null})
+      },5000)
+    }
+    catch (exception){
+      console.error('Error detallado:', exception)
+      setNotification({text:`Error deleting the blog ${blogD.title} by ${blogD.author}`, style:'error'})
+      setTimeout(()=>{
+      setNotification({text:null, style:null})
+    },5000)
+    }
+  }
+
+  
  const closeSession = ()=>{
     window.localStorage.removeItem('loggedBlogUser')
     setUser(null)
@@ -128,7 +149,7 @@ const App = () => {
           <Togglable buttonLabel="create new blog" ref={blogRef} >
             <BlogsForm handlBlog={handlBlog}/>
           </Togglable>
-          <BlogsList blogs={blogs} putBlogs={putBlogs} />
+          <BlogsList blogs={blogs} putBlogs={putBlogs} deleted={deletedB} user={user} />
         </>
       )
     }

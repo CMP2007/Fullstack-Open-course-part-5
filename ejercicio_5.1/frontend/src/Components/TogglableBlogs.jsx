@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const TogglableBlogs = ({blog, putBlogs}) => {
+const TogglableBlogs = ({blog, putBlogs, deleted, user}) => {
     const [details, setDetails] = useState(false)
 
     const showWhenVisible = { display: details ? '' : 'none' }
@@ -11,6 +11,24 @@ const TogglableBlogs = ({blog, putBlogs}) => {
 
     const toggleDetails = () => {
     setDetails(!details)
+  }
+
+  const confirDelete = () =>{
+    if (window.confirm(`Remove blog ${blog.title}`)) {
+      deleted(blog.id)
+    }
+  } 
+
+  const hidenDelete = ()=>{ 
+    if (user.id === blog.user.id || user.id === blog.user) {
+      return(
+        <>
+        <button onClick={()=>confirDelete()} >Remove</button><br />
+        </>
+      )
+    } else {
+      return null
+    }
   }
   
   const blogStyle = {
@@ -31,6 +49,7 @@ const TogglableBlogs = ({blog, putBlogs}) => {
           {blog.likes} 
           <button onClick={()=>putBlogs(blog)}>like</button><br />
           {blog.author} <br />
+          {hidenDelete()}
         </div>
       </div>
     </>
