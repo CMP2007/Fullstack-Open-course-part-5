@@ -11,7 +11,7 @@ import './App.css'
 
 
 const App = () => {
-  
+
   const [notes, setNotes] = useState([])
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
@@ -19,14 +19,14 @@ const App = () => {
 
   const noteFormRef = useRef()
 
-  useEffect(()=>{
+  useEffect(() => {
     noteService
       .getAll()
-      .then(initialNotes =>{
+      .then(initialNotes => {
         setNotes(initialNotes)
       })
   },[])
-  
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
     if (loggedUserJSON) {
@@ -36,23 +36,22 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async (username, password) =>{  
+  const handleLogin = async (username, password) => {
     try {
-      const user = await loginService.login({username, password})
+      const user = await loginService.login({ username, password })
 
       window.localStorage.setItem(
         'loggedNoteappUser', JSON.stringify(user)
       )
       noteService.setToken(user.token)
       setUser(user)
-      console.log(user);
-    } catch (exception) {
+      console.log(user)
+    } catch {
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
-    
   }
 
   const notesToShow = showAll
@@ -68,14 +67,14 @@ const App = () => {
       .then(returnedNote => {
         setNotes(notes.map(note => note.id !== id ? note : returnedNote))
       })
-      .catch(error =>{
-         setErrorMessage(
+      .catch(() => {
+        setErrorMessage(
           `Note '${note.content}' was already removed from server`
         )
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-  })}
+      })}
 
   const addNote = (noteObject) => {
     noteFormRef.current.toggleVisibility()
@@ -85,10 +84,10 @@ const App = () => {
         setNotes(notes.concat(returnedNote))
       })
       .catch(error => {
-        setErrorMessage( error.response.data.error)      
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+        setErrorMessage( error.response.data.error)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
   }
 
@@ -96,30 +95,29 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
-      
       {user === null ?
-      <Togglable buttonLabel='login'>
-        <LoginForm handleLogin= {handleLogin} />
-      </Togglable>
-        :
-      <div>
-        <p>{user.name} <b>logged-in</b></p>
-        <Togglable buttonLabel='new note' ref={noteFormRef}>
-          <NoteForm createNote={addNote} />
+        <Togglable buttonLabel='login'>
+          <LoginForm handleLogin= {handleLogin} />
         </Togglable>
-      </div>
-    }
+        :
+        <div>
+          <p>{user.name} <b>logged-in</b></p>
+          <Togglable buttonLabel='new note' ref={noteFormRef}>
+            <NoteForm createNote={addNote} />
+          </Togglable>
+        </div>
+      }
       <div>
-        <button onClick={()=> setShowAll(!showAll)}>
-          show {showAll ? "important" : "all"}
+        <button onClick={() => setShowAll(!showAll)}>
+          show {showAll ? 'important' : 'all'}
         </button>
       </div>
       <ul>
-        {notesToShow.map(note => 
-          <Note key={note.id} cambiarImportancia={()=>toggleImportanceOf(note.id)} note={note}/>
+        {notesToShow.map(note =>
+          <Note key={note.id} cambiarImportancia={() => toggleImportanceOf(note.id)} note={note}/>
         )}
       </ul>
-      <Footer/>   
+      <Footer/>
     </div>
   )
 }
