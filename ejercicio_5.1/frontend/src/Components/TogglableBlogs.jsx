@@ -4,6 +4,7 @@ const TogglableBlogs = ({ blog, putBlogs, deleted, user }) => {
   const [details, setDetails] = useState(false)
 
   const showWhenVisible = { display: details ? '' : 'none' }
+  const hidenWhenVisible = { display: details ? 'none' : '' }
 
   const labelButton = details
     ?'hide'
@@ -42,9 +43,9 @@ const TogglableBlogs = ({ blog, putBlogs, deleted, user }) => {
   return (
     <>
       <div style={blogStyle}>
-        {blog.title}
+        {blog.title} <span style={hidenWhenVisible}>{blog.author}</span>
         <button onClick={toggleDetails}>{labelButton}</button>
-        <div style={showWhenVisible}>
+        <div style={showWhenVisible} className='showWhenVisible'>
           {blog.url} <br />
           {blog.likes}
           <button onClick={() => putBlogs(blog)}>like</button><br />
