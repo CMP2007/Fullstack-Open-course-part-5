@@ -44,7 +44,7 @@ const TogglableBlogs = ({ blog, putBlogs, deleted, user }) => {
     <>
       <div style={blogStyle}>
         {blog.title} <span style={hidenWhenVisible}>{blog.author}</span>
-        <button onClick={toggleDetails}>{labelButton}</button>
+        <button onClick={toggleDetails} name='viewHiden' >{labelButton}</button>
         <div style={showWhenVisible} className='showWhenVisible'>
           {blog.url} <br />
           {blog.likes}
