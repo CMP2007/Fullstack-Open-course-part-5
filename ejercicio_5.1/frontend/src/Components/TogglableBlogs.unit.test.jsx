@@ -63,5 +63,24 @@ describe('Component: <TogglableBlogs/>',() => {
       expect(likes).toBeVisible()
 
     })
+
+    test('The event handler runs for every interaction with the "likes" button', async () => {
+      const mockHandler = vi.fn()
+
+      render (
+      <TogglableBlogs blog={blog} user={blog.user} putBlogs={mockHandler}/>
+      )
+
+      const user = userEvent.setup()
+      const buttonView = screen.getByRole('button', {name: /view/i})
+      await user.click(buttonView)
+      
+      const buttonLike = screen.getByRole('button', {name: /like/i})
+      await user.click(buttonLike)
+      await user.click(buttonLike)
+
+      expect(mockHandler.mock.calls).toHaveLength(2)
+    })
+
   })
 })
