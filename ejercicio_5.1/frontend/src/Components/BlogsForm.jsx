@@ -28,6 +28,7 @@ const BlogsForm = ({ handlBlog }) => {
         required
         name="title"
         id="title"
+        placeholder='Enter the title here'
         value={title}
         onChange={({ target }) => setTitle(target.value) }
       />
@@ -38,6 +39,7 @@ const BlogsForm = ({ handlBlog }) => {
         required
         name="author"
         id="author"
+        placeholder='Enter the author here'
         value={author}
         onChange={({ target }) => setAuthor(target.value) }
       />
@@ -48,6 +50,7 @@ const BlogsForm = ({ handlBlog }) => {
         required
         name="url"
         id="url"
+        placeholder='Enter the URL here'
         value={url}
         onChange={({ target }) => setUrl(target.value) }
       />

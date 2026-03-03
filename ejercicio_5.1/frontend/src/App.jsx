@@ -14,8 +14,6 @@ import './index.css'
 const App = () => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [notification, setNotification] = useState({ text:null, style:null })
 
   const blogRef  = useRef()
@@ -39,15 +37,12 @@ const App = () => {
     }
   }, [])
 
-  const handlLogin = async (event) => {
-    event.preventDefault()
+  const handlLogin = async (password, username ) => {
     try{
       const response = await LoginServise.login({ password, username })
       window.localStorage.setItem(
         'loggedBlogUser', JSON.stringify(response)
       )
-      setUsername('')
-      setPassword('')
       setUser(response)
     }
     catch {
@@ -55,8 +50,6 @@ const App = () => {
       setTimeout(() => {
         setNotification({ text:null, style:null })
       },5000)
-      setPassword('')
-      setUsername('')
     }
   }
 
@@ -131,13 +124,7 @@ const App = () => {
         <>
           <h1>log in to application</h1>
           <Notification message = {notification.text} style={notification.style}/>
-          <Login
-            password={password}
-            username={username}
-            setUsername={setUsername}
-            setPassword={setPassword}
-            handlLogin={handlLogin}
-          />
+          <Login handlLogin={handlLogin}/>
         </>
       )
     } else {
