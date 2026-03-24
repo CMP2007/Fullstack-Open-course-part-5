@@ -12,17 +12,19 @@ const Login = ({ handlLogin }) => {
   }
   return(
     <form onSubmit={loginSend}>
-      <b>username</b>
+      <label htmlFor="username"><b>username</b></label>
       <input type="text"
         name="username"
+        id='username'
         value={username}
         onChange={({ target }) => setUsername(target.value)}
       />
       <br />
-      <b>password</b>
+      <label htmlFor="password"><b>password</b></label>
       <input
         type="password"
         name="Password"
+        id='password'
         value={password}
         onChange={({ target }) => setPassword(target.value) }
       />

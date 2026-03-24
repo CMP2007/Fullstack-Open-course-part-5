@@ -24,3 +24,10 @@ backEnd/node_modules
 *.njsproj
 *.sln
 *.sw?
+
+
+# Playwright
+E2E-Test/test-results/
+E2E-Test/playwright-report/
+E2E-Test/blob-report/
+E2E-Test/playwright/.cache/
