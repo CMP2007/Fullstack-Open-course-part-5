@@ -1,4 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
+const { loginWith, createBlog } = require('./helpers')
 
 describe('Blog app', () => {
   beforeEach(async ({ page }) => {
@@ -22,20 +23,15 @@ describe('Blog app', () => {
         }
       })
     })
+    
     test('You can log in successfully', async ({page}) => {
-      await expect(page.getByLabel('username')).toBeVisible()
-      await page.getByRole('textbox').first().fill('test')
-      await page.getByRole('textbox').last().fill('test')
-      await page.getByRole('button', { name: 'login' }).click() 
+      await loginWith(page, 'test', 'test') 
 
       await expect(page.getByText('test logged in')).toBeVisible()
     })
 
     test('fails with wrong credentials', async ({ page }) => {
-      await expect(page.getByLabel('username')).toBeVisible()
-      await page.getByLabel('username').fill('test')
-      await page.getByLabel('password').fill('error')
-      await page.getByRole('button', { name: 'login' }).click() 
+      await loginWith(page, 'test', 'error')
 
       const errorDiv = await page.locator('.error')
       await expect(errorDiv).toContainText('wrong username or password')
@@ -43,6 +39,23 @@ describe('Blog app', () => {
       await expect(errorDiv).toHaveCSS('color', 'rgb(255, 0, 0)')
 
       await expect(page.getByText('test logged in')).not.toBeVisible()
+    })
+
+    describe('When logged in', () => {
+      beforeEach(async ({ page }) => {
+          await loginWith(page, 'test', 'test')
+      })
+
+      test('a new blog can be created', async ({ page }) => {
+        await createBlog(page, 'a blog created by playwright', 'Author name', 'www/playwright.com')
+
+        const alertDiv = await page.locator('.alert')
+        await expect(alertDiv).toContainText('a new blog a blog created by playwright')
+        await expect(alertDiv).toHaveCSS('border-style', 'solid')
+        await expect(alertDiv).toHaveCSS('color', 'rgb(0, 128, 0)')
+        
+        await expect(page.getByTestId('blog-list').getByText('a blog created by playwright')).toBeVisible()
+      })
     })
   })
 })

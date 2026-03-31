@@ -6,7 +6,7 @@ const BlogsList = ({ blogs, putBlogs, deleted, user }) => {
   })
 
   return(
-    <div>
+    <div data-testid='blog-list'>
       {blogsSort.map(blog =>
         <TogglableBlogs
           blog={blog}
