@@ -56,6 +56,21 @@ describe('Blog app', () => {
         
         await expect(page.getByTestId('blog-list').getByText('a blog created by playwright')).toBeVisible()
       })
+
+      test('a new blog can be added', async ({ page }) => {
+        await createBlog(page, 'a blog created by playwright', 'Author name', 'www/playwright.com')   
+        await expect(page.getByTestId('blog-list').getByText('a blog created by playwright')).toBeVisible()
+        const blog = page.getByTestId('blog-list').getByText('a blog created by playwright')
+        await blog.getByRole('button', { name: 'view' }).click()
+        await blog.getByRole('button', { name: 'like' }).click()
+
+        const alertDiv = await page.locator('.alert')
+        await expect(alertDiv).toContainText('a vote for a blog created by playwright by Author name added')
+        await expect(alertDiv).toHaveCSS('border-style', 'solid')
+        await expect(alertDiv).toHaveCSS('color', 'rgb(0, 128, 0)')
+
+        await expect(blog.getByText(1)).toBeVisible()
+      })
     })
   })
 })
