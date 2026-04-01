@@ -100,6 +100,41 @@ describe('Blog app', () => {
         const blog = page.getByTestId('blog-list').getByText('a blog created by playwright')
         await blog.getByRole('button', { name: 'view' }).click()
         await expect(blog.getByRole('button', { name: 'Remove' })).not.toBeVisible()
+      })
+
+      test('Blogs are ordered according to the number of likes', async({page}) => {
+        await expect(page.getByTestId('blog-list').getByText('a blog created by playwright')).toBeVisible()
+
+        await createBlog(page, 'one blog more', 'Author name', 'www/playwright.com')
+        await expect(page.getByTestId('blog-list').getByText('one blog more')).toBeVisible()
+        const blog = page.getByTestId('blog-list').getByText('one blog more')
+
+        await createBlog(page, 'and more blog', 'Author name', 'www/playwright.com')
+        await expect(page.getByTestId('blog-list').getByText('and more blog')).toBeVisible()
+
+        await blog.getByRole('button', { name: 'view' }).click()
+        await blog.getByRole('button', { name: 'like' }).click()
+        await expect(blog.locator('.likes-count')).toHaveText('1')
+
+        const blog2 = page.getByTestId('blog-list').getByText('and more blog')
+        await blog2.getByRole('button', { name: 'view' }).click()
+        await blog2.getByRole('button', { name: 'like' }).click()
+        await expect(blog2.locator('.likes-count')).toHaveText('1')
+        await blog2.getByRole('button', { name: 'like' }).click()
+        await expect(blog2.locator('.likes-count')).toHaveText('2')
+        await blog2.getByRole('button', { name: 'like' }).click()
+        await expect(blog2.locator('.likes-count')).toHaveText('3')
+
+        await expect(page.getByTestId('blog-item').first()).toContainText('and more blog')
+
+        const likesLocators = page.locator('.likes-count')
+        
+        const likesTexts = await likesLocators.allTextContents()
+        const likesNumbers = likesTexts.map(text => parseInt(text))
+
+        const sortedLikes = [...likesNumbers].sort((a, b) => b - a)
+
+        expect(likesNumbers).toEqual(sortedLikes)
         
       })
     })
