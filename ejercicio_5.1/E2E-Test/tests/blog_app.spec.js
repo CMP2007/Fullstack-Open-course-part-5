@@ -44,11 +44,10 @@ describe('Blog app', () => {
     describe('When logged in', () => {
       beforeEach(async ({ page }) => {
           await loginWith(page, 'test', 'test')
+          await createBlog(page, 'a blog created by playwright', 'Author name', 'www/playwright.com')
       })
 
       test('a new blog can be created', async ({ page }) => {
-        await createBlog(page, 'a blog created by playwright', 'Author name', 'www/playwright.com')
-
         const alertDiv = await page.locator('.alert')
         await expect(alertDiv).toContainText('a new blog a blog created by playwright')
         await expect(alertDiv).toHaveCSS('border-style', 'solid')
@@ -57,9 +56,7 @@ describe('Blog app', () => {
         await expect(page.getByTestId('blog-list').getByText('a blog created by playwright')).toBeVisible()
       })
 
-      test('a new blog can be added', async ({ page }) => {
-        await createBlog(page, 'a blog created by playwright', 'Author name', 'www/playwright.com')   
-        await expect(page.getByTestId('blog-list').getByText('a blog created by playwright')).toBeVisible()
+      test('a new blog can be added', async ({ page }) => {  
         const blog = page.getByTestId('blog-list').getByText('a blog created by playwright')
         await blog.getByRole('button', { name: 'view' }).click()
         await blog.getByRole('button', { name: 'like' }).click()
@@ -70,6 +67,23 @@ describe('Blog app', () => {
         await expect(alertDiv).toHaveCSS('color', 'rgb(0, 128, 0)')
 
         await expect(blog.getByText(1)).toBeVisible()
+      })
+
+      test('a new blog can be removed', async ({page}) => {
+        const blog = page.getByTestId('blog-list').getByText('a blog created by playwright')
+        await blog.getByRole('button', { name: 'view' }).click()
+        
+        await Promise.all([
+          page.waitForEvent('dialog').then(dialog => dialog.accept()),
+          blog.getByRole('button', { name: 'Remove' }).click()
+        ])
+
+        const alertDiv = await page.locator('.alert')
+        await expect(alertDiv).toContainText('the blog a blog created by playwright by Author name has been successfully deleted')
+        await expect(alertDiv).toHaveCSS('border-style', 'solid')
+        await expect(alertDiv).toHaveCSS('color', 'rgb(0, 128, 0)')
+
+        await expect(page.getByTestId('blog-list').getByText('a blog created by playwright')).not.toBeVisible()
       })
     })
   })
