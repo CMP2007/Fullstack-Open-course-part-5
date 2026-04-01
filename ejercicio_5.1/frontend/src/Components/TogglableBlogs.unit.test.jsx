@@ -42,7 +42,8 @@ describe('Component: <TogglableBlogs/>',() => {
       const url = screen.queryByText(blog.url)
       expect(url).toBeNull()
       const likes = screen.queryByText(blog.likes)
-      expect(likes).toBeNull()
+      // expect(likes).toBeNull()
+      expect(screen.getByText(blog.likes)).not.toBeVisible()
     })
   })
 
