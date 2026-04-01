@@ -85,6 +85,23 @@ describe('Blog app', () => {
 
         await expect(page.getByTestId('blog-list').getByText('a blog created by playwright')).not.toBeVisible()
       })
+
+      test('Only the creator can see the rmove button', async ({page, request}) => {
+        await expect(page.getByTestId('blog-list').getByText('a blog created by playwright')).toBeVisible()
+        await page.getByRole('button', { name: 'logout' }).click()
+        await request.post('/api/users', {
+          data: {
+            name: 'test2',
+            username: 'test2',
+            password: 'test2'
+          }
+        })
+        await loginWith(page, 'test2', 'test2')
+        const blog = page.getByTestId('blog-list').getByText('a blog created by playwright')
+        await blog.getByRole('button', { name: 'view' }).click()
+        await expect(blog.getByRole('button', { name: 'Remove' })).not.toBeVisible()
+        
+      })
     })
   })
 })
