@@ -15,12 +15,17 @@ This repository is part of my learning journey in the Full Stack Open course. In
 > In the event that a single project is used for practices or to complete the exercises throughout the level, its respective folder will only contain that single project.
 
 ## 📸 Preview
-![Project Preview](./screenshots/project-demo.png)
-*Screenshot of the Bloglist application with the notification system and login.*
 
-[//]: # (Consejos técnicos para la captura:)
- [//]: # (Muestra la aplicación con algunos datos cargados blogs creados y, si es posible, con el formulario de creación abierto. Eso demuestra que la lógica de "mostrar/ocultar" donde usaste forwardRef funciona.)
- [//]: # (GIF Opcional pero recomendado: Si quieres impresionar, usa una herramienta como *ScreenToGif* para grabar 5 segundos haciendo login y creando un blog. En el README se vería igual que una imagen pero con movimiento.)
+### Login Screen
+![Login Screen](./ejercicio_5.1/screenshots/login.jpg)
+*Initial view where users must authenticate to access the bloglist.*
+
+### Main Application
+![Project Preview](./ejercicio_5.1/screenshots/project-demo.jpg)
+*Screenshot of the Bloglist application with the notification system.*
+
+![form Preview](./ejercicio_5.1/screenshots/project-demo-formBLog.jpg)
+*Screenshot of the Bloglist application and the blog creation form.*
 
 ## 📋 Module Objectives / Key Features
 * Login implementation and token handling (localStorage).
@@ -30,14 +35,14 @@ This repository is part of my learning journey in the Full Stack Open course. In
 * Use of `forwardRef` and `useImperativeHandle`.
 
 ## 🎓 Learning Outcomes
-*(Sección pendiente de completar)*
+
 * Mastery of the JWT-based authentication flow and LocalStorage persistence.
 
 * Ability to write tests that simulate real user interactions, reducing production errors.
   
 * Improvement in component architecture through the use of advanced Hooks and type validation with PropTypes.
   
-## ✅ ECompleted Exercises
+## ✅ Completed Exercises
 * [x] 5.1 - 5.4: Bloglist frontend, steps 1-4
 * [x] 5.5 - 5.12: Bloglist frontend, steps 5-12
 * [x] 5.13 - 5.16: Bloglist tests, steps 1-4
@@ -67,10 +72,9 @@ This repository is part of my learning journey in the Full Stack Open course. In
 
 ## 🚀 Installation
 ```bash
-# Clone and enter the director
+# Clone and enter the directory
 git clone https://github.com/CMP2007/Fullstack-Open-course-part-5
-cd Fullstack-Open-course-part-5
-cd ejercicio_5.1
+cd Fullstack-Open-course-part-5/ejercicio_5.1
 
 # Configure the Backend
 cd backend
@@ -88,6 +92,55 @@ npm run dev
 # Run tests
 npm run test
 ```
+
+## 🧪 Testing Suite
+This project implements a comprehensive testing strategy across the entire stack.
+
+### 1. Frontend: Unit & Integration Tests
+Powered by Vitest and React Testing Library.
+
+```bash
+cd ejercicio_5.1/frontend
+npm run test
+npm run coverage # For coverage report
+```
+### 2. Backend: Integration Tests
+Using the native Node.js test runner with Supertest.
+
+```bash
+cd ejercicio_5.1/backend
+npm run test
+```
+
+### 3. End-to-End (E2E) Tests
+Utilizing Playwright for full user flow simulation.
+
+> [!IMPORTANT]
+> Prerequisites: The backend must be running in test mode (npm run start:test) and the frontend in dev mode (npm run dev) before executing E2E tests.
+
+```bash
+cd ejercicio_5.1/E2E-Test
+npm run test        # Headless mode
+npm run interfaz    # Interactive UI mode
+```
+
+## ⚙️ Environment Configuration
+This project requires a MongoDB database and JWT secret.
+
+1. Create a .env file in ejercicio_5.1/backend/.
+
+2. Define variables:
+
+```env
+MONGODB_URI=your_mongodb_connection_string
+TEST_MONGODB_URI=your_test_mongodb_connection_string
+PORT=3003
+SECRET=your_jwt_secret_phrase
+```
+
+> [!TIP]
+> Using a separate TEST_MONGODB_URI is crucial. The test suite resets the database state before each execution to ensure reliability.
+
 ## 🔍 Project Notes
 This repository strictly follows the University of Helsinki conventions, including the use of npm for dependency management and testing scripts. The primary focus is the transition toward Test-Driven Development (TDD) and improving frontend architecture.
 
