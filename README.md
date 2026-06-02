@@ -4,13 +4,13 @@ Repository containing the solutions for Part 5 of the University of Helsinki cou
 
 ## 🛠️ Tecnologías
 * **Frontend:** React + Vite
-* **Testing:** Vitest, React Testing Library y Playwright (E2E)
+* **Testing:** Vitest, React Testing Library and Playwright (E2E)
 
 ## 📖 About
 This repository is part of my learning journey in the Full Stack Open course. In this specific module, the work focused on ensuring application reliability through automated testing and deepening knowledge of advanced React patterns for handling complex components.
 
 > [!NOTE]
-> **Practice Project:** 🏛️ **Exercises Project.**.
+> **Practice Project:** 🏛️ Exercises Project.
 > This repository is divided into a simple folder structure: the practica_5.1 folder contains the example projects developed during the reading of the material, while the ejercicio_5.1 folder contains the projects used to complete the exercises for this level. The structure of both and the installation steps are identical.
 > In the event that a single project is used for practices or to complete the exercises throughout the level, its respective folder will only contain that single project.
 
@@ -149,5 +149,6 @@ This repository strictly follows the University of Helsinki conventions, includi
 
 ---
 **Carlos Puche** - Autodidactic Full Stack programming student.
+📩 **Contact:** puchecarlos00@gmail.com
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/carlos-puche-0444b53ba/)
